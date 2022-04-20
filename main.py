@@ -9,6 +9,17 @@ url_ygoprodeck = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
 
 folder=None
 ydk=None
+is_TCG=True
+
+def switch():
+    global is_TCG
+    if is_TCG:
+        on_button.config(image = off)
+        is_TCG = False
+    else:
+        on_button.config(image = on)
+        is_TCG = True
+
 
 def get_folder():
     global folder
@@ -39,8 +50,14 @@ def read_ydk(ydk):
 def get_cards(cards_lines, download_location):
     cards_to_download = []
     for c in cards_lines:
-        r = requests.get(url=url_ygoprodeck, params={'id': c})
-        cards_to_download.append(r.json()['data'][0]['card_images'][0]['image_url'])
+        try:
+            if is_TCG:
+                r = requests.get(url=url_ygoprodeck, params={'id': c})
+            else:
+                r = requests.get(url=url_ygoprodeck, params={'format':"Rush Duel",'id': c})
+            cards_to_download.append(r.json()['data'][0]['card_images'][0]['image_url'])
+        except:
+            print("Error getting card %s" % c)
 
     for d in cards_to_download:
         wget.download(d, download_location)
@@ -61,6 +78,12 @@ label = Label(canvas1, text= "Select a Folder to download the images, then selec
 label.pack(pady=1)
 
 canvas1.pack(side='top')
+
+on = PhotoImage(file = "assets/on.png")
+off = PhotoImage(file = "assets/off.png")
+
+on_button = Button(root, image = on, bd = 0,command = switch)
+on_button.pack(pady = 50)
 
 button1=tk.Button(canvas1, text= "Select Folder to download the Images to", command= get_folder).pack(side=TOP)
 button2=tk.Button(canvas1,text="Select YDK file to pull cards from", command=get_ydk).pack(side=TOP)
