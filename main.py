@@ -4,12 +4,19 @@ import tkinter as tk
 import numpy as np
 import requests
 import wget
+import sys
+import os
 
 url_ygoprodeck = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
 
 folder=None
 ydk=None
 is_TCG=True
+
+if getattr(sys, 'frozen', False):
+    wd = sys._MEIPASS
+else:
+    wd = ''
 
 def switch():
     global is_TCG
@@ -79,8 +86,8 @@ label.pack(pady=1)
 
 canvas1.pack(side='top')
 
-on = PhotoImage(file = "assets/on.png")
-off = PhotoImage(file = "assets/off.png")
+on = PhotoImage(file = os.path.join(wd,'assets','on.png'))
+off = PhotoImage(file = os.path.join(wd,'assets','off.png'))
 
 on_button = Button(root, image = on, bd = 0,command = switch)
 on_button.pack(pady = 50)
