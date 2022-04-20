@@ -1,7 +1,3 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from tkinter import filedialog
 from tkinter import *
 import tkinter as tk
@@ -34,8 +30,8 @@ remove_trailing= lambda x: remove_trailing_func(x)
 def read_ydk(ydk):
     lines = [line.rstrip() for line in open(ydk)]
     for l in lines:
-        if '!' in l: lines.remove(l)
-        elif '#' in l: lines.remove(l)
+        if '!' in l: lines=list(filter((l).__ne__,lines))
+        elif '#' in l: lines=list(filter((l).__ne__,lines))
     lines_unique = np.array(np.unique(np.array(lines)))
     return lines_unique
 
@@ -66,7 +62,7 @@ label.pack(pady=1)
 
 canvas1.pack(side='top')
 
-button1=tk.Button(canvas1, text= "Select Folder to download the Images tor", command= get_folder).pack(side=TOP)
+button1=tk.Button(canvas1, text= "Select Folder to download the Images to", command= get_folder).pack(side=TOP)
 button2=tk.Button(canvas1,text="Select YDK file to pull cards from", command=get_ydk).pack(side=TOP)
 button3=tk.Button(canvas1,text="Start!",command=turn_ydk_to_images).pack(side=TOP)
 
