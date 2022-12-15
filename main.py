@@ -71,7 +71,7 @@ def get_cards(cards_lines, download_location):
                                                                                                                     '_').replace(
                 '!', '_').replace('\'', '_')
 
-            r = requests.get(r.json()['data'][0]['card_images'][0]['image_url'], stream=True)
+            r = requests.get(r.json()['data'][0]['card_images'][0]['image_url'].replace('/cards/','/cards_cropped/'), stream=True)
             if r.status_code == 200:
                 with open(download_location + "/" + name + ".jpg", 'wb') as f:
                     r.raw.decode_content = True
