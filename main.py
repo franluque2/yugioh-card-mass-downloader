@@ -61,6 +61,7 @@ def read_ydk(ydk):
 
 
 def get_cards(cards_lines, download_location):
+    returndata = "["
     for c in cards_lines:
         try:
             if is_TCG:
@@ -70,8 +71,9 @@ def get_cards(cards_lines, download_location):
             name = r.json()['data'][0]['name'].lower().replace(' ', '_').replace('"', '').replace(':', '_').replace('-',
                                                                                                                     '_').replace(
                 '!', '_').replace('\'', '_')
+            returndata += " " + name + ".jpg" + " ,"
+            r = requests.get(r.json()['data'][0]['card_images'][0]['image_url'], stream=True) #.replace('/cards/', '/cards_cropped/'),
 
-            r = requests.get(r.json()['data'][0]['card_images'][0]['image_url'].replace('/cards/','/cards_cropped/'), stream=True)
             if r.status_code == 200:
                 with open(download_location + "/" + name + ".jpg", 'wb') as f:
                     r.raw.decode_content = True
@@ -79,6 +81,10 @@ def get_cards(cards_lines, download_location):
 
         except:
             print("Error getting card %s" % c)
+    returndata = returndata[:-1]
+    returndata += "]"
+    with open(download_location + "/" + "downloaded_cards" + ".txt", 'w') as f:
+        f.write(returndata)
 
 
 def turn_ydk_to_images():
@@ -101,9 +107,8 @@ label.pack(pady=1)
 
 canvas1.pack(side='top')
 
-on = PhotoImage(file = os.path.join(wd,'on.png'))
-off = PhotoImage(file = os.path.join(wd,'off.png'))
-
+on = PhotoImage(file=os.path.join(wd, 'on.png'))
+off = PhotoImage(file=os.path.join(wd, 'off.png'))
 
 on_button = Button(root, image=on, bd=0, command=switch)
 on_button.pack(pady=50)
